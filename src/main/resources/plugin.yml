@@ -1,0 +1,12 @@
+name: LifeAndDie
+version: 2.0
+main: org.examp.lifeanddie.LifeAndDie
+api-version: 1.12
+
+commands:
+  class:
+    description: Choose your class.
+    usage: /class <warrior|mage|archer>
+  skill:
+    description: Choose your skills.
+    usage: /eskill
