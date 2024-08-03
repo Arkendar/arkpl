@@ -1,0 +1,30 @@
+name: LifeAndDie
+version: 3.0
+main: org.examp.lifeanddie.LifeAndDie
+api-version: 1.12
+
+commands:
+  class:
+    description: Choose your class.
+    usage: /class <warrior|mage|archer>
+  skill:
+    description: Choose your skills.
+    usage: /skill
+  duel:
+    description: Send a duel invitation to another player
+    usage: /<command> <player>
+  duelaccept:
+    description: Accept a duel invitation
+    usage: /<command>
+  dueldecline:
+    description: Decline a duel invitation
+    usage: /<command>
+  createarena:
+    description: Create a new battle arena.
+    usage: /<command> <name>
+    permission: lifeanddie.createarena
+    permission-message: You do not have permission to use this command.
+  stats:
+    description: Показывает статистику игрока
+    usage: /<command> [игрок]
+    aliases: [ статистика ]
