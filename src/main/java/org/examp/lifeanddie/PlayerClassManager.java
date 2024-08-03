@@ -1,43 +1,32 @@
 package org.examp.lifeanddie;
-import org.bukkit.DyeColor;
+
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-
-
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.Dye;
 
 import java.util.*;
-
-import static org.bukkit.DyeColor.WHITE;
 import static org.bukkit.Material.*;
-import org.bukkit.Material;
 
 
 public class PlayerClassManager implements Listener {
 
-    private final Map<UUID, PlayerClass> playerClasses = new HashMap<>();
 
-    public PlayerClassManager(LifeAndDie lifeAndDie) {
-    }
+    private final PlayerData playerData;
 
-    public PlayerClass getPlayerClass(Player player) {
-        return playerClasses.get(player.getUniqueId());
+    public PlayerClassManager(LifeAndDie plugin) {
+        this.playerData = plugin.getPlayerData();
     }
 
     public void setPlayerClass(Player player, PlayerClass playerClass) {
-        playerClasses.put(player.getUniqueId(), playerClass);
+        playerData.setPlayerClass(player.getUniqueId(), playerClass);
         equipPlayer(player, playerClass);
     }
 
     public boolean hasChosenClass(Player player) {
-        return playerClasses.containsKey(player.getUniqueId());
+        return playerData.hasChosenClass(player);
     }
 
     private void equipPlayer(Player player, PlayerClass playerClass) {

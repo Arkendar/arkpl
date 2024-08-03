@@ -4,9 +4,17 @@
 
     <groupId>org.examp</groupId>
     <artifactId>lifeanddie</artifactId>
-    <version>2.0</version>
+    <version>3.0</version>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.yml</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

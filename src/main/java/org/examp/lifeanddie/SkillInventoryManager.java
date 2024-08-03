@@ -47,26 +47,23 @@ public class SkillInventoryManager implements Listener {
             event.setCancelled(true);
             if (event.getWhoClicked() instanceof Player) {
                 Player player = (Player) event.getWhoClicked();
-                ItemStack item = event.getCurrentItem();
-                if (item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
-                    String skillName = item.getItemMeta().getDisplayName();
+                ItemStack clickedItem = event.getCurrentItem();
+                if (clickedItem != null && clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasDisplayName()) {
+                    String skillName = clickedItem.getItemMeta().getDisplayName();
 
-                    // Проверяем, есть ли уже предмет с таким же именем в инвентаре игрока
                     boolean hasSkill = false;
                     for (ItemStack invItem : player.getInventory().getContents()) {
-                        if (invItem != null && invItem.hasItemMeta() && invItem.getItemMeta().hasDisplayName()) {
-                            if (invItem.getItemMeta().getDisplayName().equals(skillName)) {
-                                hasSkill = true;
-                                break;
-                            }
+                        if (invItem != null && invItem.isSimilar(clickedItem)) {
+                            hasSkill = true;
+                            break;
                         }
                     }
 
                     if (hasSkill) {
-                        player.sendMessage("You already have this skill in your inventory!");
+                        player.sendMessage("У тебя в инвентаре уже есть это умение!");
                     } else {
-                        player.sendMessage("You have chosen the skill: " + skillName);
-                        player.getInventory().addItem(item.clone());
+                        player.sendMessage("Ты выбрал умение: " + skillName);
+                        player.getInventory().addItem(clickedItem.clone());
                     }
                 }
             }
