@@ -76,7 +76,7 @@ public class WrathStorm extends AbstractAbility{
 
                         for (Entity entity : particleLocation.getWorld().getNearbyEntities(particleLocation, 1, 1, 1)) {
                             if (entity instanceof LivingEntity && entity != player) {
-                                ((LivingEntity) entity).damage(2);
+                                ((LivingEntity) entity).damage(1);
                             }
                         }
                     }

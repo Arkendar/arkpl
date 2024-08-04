@@ -1,22 +1,30 @@
 package org.examp.lifeanddie;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.examp.lifeanddie.battle.*;
-import org.examp.lifeanddie.commands.ChooseClassCommand;
-import org.examp.lifeanddie.commands.ChooseSkillCommand;
-import org.examp.lifeanddie.commands.StatsCommand;
+import org.examp.lifeanddie.commands.*;
 import org.examp.lifeanddie.commands.battlecommands.CreateArenaCommand;
 import org.examp.lifeanddie.commands.battlecommands.DuelAcceptCommand;
 import org.examp.lifeanddie.commands.battlecommands.DuelDeclineCommand;
 import org.examp.lifeanddie.commands.battlecommands.SendDuelCommand;
+import org.examp.lifeanddie.gui.TagGUI;
+import org.examp.lifeanddie.listeners.PlayerJoinListener;
+import org.examp.lifeanddie.listeners.TagGUIListener;
+import org.examp.lifeanddie.prefix.PrefixManager;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class LifeAndDie extends JavaPlugin {
+public final class LifeAndDie extends JavaPlugin implements Listener {
 
     private PlayerClassManager playerClassManager;
     private SkillInventoryManager skillInventoryManager;
@@ -28,6 +36,9 @@ public final class LifeAndDie extends JavaPlugin {
     private ArenaManager arenaManager;
     private BattleStatistics battleStatistics;
     private List<Duel> activeDuels;
+    private PrefixManager prefixManager;
+    private TagGUI tagGUI;
+
 
 
 
@@ -39,10 +50,9 @@ public final class LifeAndDie extends JavaPlugin {
         this.skillInventoryManager = new SkillInventoryManager(playerClassManager);
 
 
-//        this.battleStatistics = new BattleStatistics();
         this.battleConfig = new BattleConfig(this);
 
-        this.arenaManager = new ArenaManager();
+        this.arenaManager = new ArenaManager(this);
 
         this.sendDuelCommand = new SendDuelCommand(duelManager);
 
@@ -54,9 +64,15 @@ public final class LifeAndDie extends JavaPlugin {
 
         this.activeDuels = new ArrayList<>();
 
+        this.prefixManager = new PrefixManager(this, battleStatistics);
+        this.tagGUI = new TagGUI(prefixManager);
+
+
+
         createDefaultConfig();
         registerListeners();
         registerCommands();
+
 
         new BukkitRunnable() {
             @Override
@@ -69,11 +85,15 @@ public final class LifeAndDie extends JavaPlugin {
     }
 
     private void registerListeners() {
-        getServer().getPluginManager().registerEvents(new PlayerJoinListener(playerClassManager), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(playerClassManager, prefixManager), this);
+        getServer().getPluginManager().registerEvents(new TagGUIListener(prefixManager), this);
         getServer().getPluginManager().registerEvents(new AbilityUseListener(playerData, this), this);
         getServer().getPluginManager().registerEvents(playerClassManager, this);
         getServer().getPluginManager().registerEvents(skillInventoryManager, this);
         getServer().getPluginManager().registerEvents(new BattleListener(this, battleManager, duelManager), this);
+        getServer().getPluginManager().registerEvents(this, this);
+
+
     }
 
     private void registerCommands() {
@@ -120,11 +140,20 @@ public final class LifeAndDie extends JavaPlugin {
 
         //stats
         this.getCommand("stats").setExecutor(new StatsCommand(battleStatistics));
+        //top
+        this.getCommand("top").setExecutor(new TopCommand(battleStatistics));
+        //tag
+        getCommand("tag").setExecutor(new TagCommand(tagGUI));
+
+
+
 
     }
     @Override
     public void onDisable() {
         this.battleStatistics.saveStats(); // Сохранение статистики при выключении
+        this.prefixManager.savePlayerTags();
+
 
         // Plugin shutdown logic
     }
@@ -146,7 +175,7 @@ public final class LifeAndDie extends JavaPlugin {
         FileConfiguration config = getConfig();
 
         // Устанавливаем значения по умолчанию, если они отсутствуют
-        config.addDefault("duel.countdown_time", 10);
+        config.addDefault("duel.countdown_time", 5);
         config.addDefault("duel.max_duration", 300);
 
         // Сохраняем значения по умолчанию
@@ -154,13 +183,30 @@ public final class LifeAndDie extends JavaPlugin {
         saveConfig();
     }
 
-    public void checkDuelsState() {
-        this.getLogger().info("Checking duels state:");
-        for (AbstractBattle battle : battleManager.getActiveBattles()) {
-            if (battle instanceof Duel) {
-                Duel duel = (Duel) battle;
-                this.getLogger().info("Duel: " + duel.getParticipants() + ", State: " + duel.getState());
-            }
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
+        Player player = event.getPlayer();
+        String tag = prefixManager.getPlayerTag(player);
+        String message = event.getMessage();
+
+        // Создаем новое отображаемое имя с тегом
+        String newDisplayName = tag + "• " + player.getName();
+
+        // Определяем цвет сообщения в зависимости от тега
+        String messageColor = getMessageColorByTag(tag);
+
+        // Создаем новый формат с цветным сообщением
+        String newFormat = newDisplayName + " ❱ " + messageColor + "%2$s";
+        event.setFormat(newFormat);
+    }
+
+    private String getMessageColorByTag(String tag) {
+
+        if (tag.contains("[LEADER]")) {return ChatColor.GOLD + "";
+        } else if (tag.contains("[VIP]")) {return ChatColor.GREEN + "";
+        } else if (tag.contains("[ADMIN]")) {return ChatColor.RED + "";
+        } else if (tag.contains("[НОВИЧОК]")) {return ChatColor.GRAY + "";
         }
+        else {return ChatColor.WHITE + "";}
     }
 }

@@ -57,7 +57,7 @@ public class Cloud extends AbstractAbility{
 
             @Override
             public void run() {
-                if (count >= 20) { // Спавним 20 зелий (можно изменить)
+                if (count >= 5) { // Спавним 5 зелий
                     this.cancel();
                     return;
                 }

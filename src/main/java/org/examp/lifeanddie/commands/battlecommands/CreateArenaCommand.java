@@ -22,7 +22,7 @@ public class CreateArenaCommand implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-        if (args.length < 5) {
+        if (args.length < 7) {
             player.sendMessage("Usage: /createarena <name> <x1> <y1> <z1> <x2> <y2> <z2>");
             return true;
         }

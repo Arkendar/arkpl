@@ -28,3 +28,9 @@ commands:
     description: Показывает статистику игрока
     usage: /<command> [игрок]
     aliases: [ статистика ]
+  top:
+    description: Показывает топ игроков по рейтингу
+    usage: /<command> [количество]
+  tag:
+    description: Открывает меню выбора тега
+    usage: /<command>

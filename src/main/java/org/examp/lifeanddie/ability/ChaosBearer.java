@@ -95,7 +95,7 @@ public class ChaosBearer extends AbstractAbility{
                                     Location particleLocation = player.getLocation().clone();
                                     particleLocation.setY(particleLocation.getY() + 1.0);
                                     Player target = (Player) entity;
-                                    target.damage(2.0);
+                                    target.damage(5.0);
                                     player.getWorld().spawnParticle(Particle.FALLING_DUST, particleLocation, 30, 1, 2, 1, 0.5);
                                 }
                             }

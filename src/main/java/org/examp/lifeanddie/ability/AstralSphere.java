@@ -62,7 +62,7 @@ public class AstralSphere extends AbstractAbility{
 
                 // Восстанавливаем здоровье игрока
                 if (ticks % 4 == 0) { // Каждую секунду (каждые 4 тика при 5 тиках обновления)
-                    double newHealth = Math.min(player.getHealth() + 1, player.getMaxHealth());
+                    double newHealth = Math.min(player.getHealth() + 2, player.getMaxHealth());
                     player.setHealth(newHealth);
                 }
 

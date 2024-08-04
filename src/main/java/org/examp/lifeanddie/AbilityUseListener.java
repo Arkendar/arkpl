@@ -51,13 +51,6 @@ public class AbilityUseListener implements Listener {
 
     @EventHandler
     public void onPlayerUseAbility(PlayerInteractEvent event) {
-
-        if (WorldManager.isWorldRestricted(event.getPlayer().getWorld())) {
-            event.setCancelled(true);
-            event.getPlayer().sendMessage("Вы не можете использовать умения в этом мире!");
-            return;
-        }
-
         Player player = event.getPlayer();
         ItemStack item = event.getItem();
 
@@ -69,11 +62,13 @@ public class AbilityUseListener implements Listener {
         Ability ability = getAbilityByDisplayName(displayName);
 
         if (ability != null) {
+            if (WorldManager.isAbilityRestricted(player.getWorld())) {
+                event.setCancelled(true);
+                player.sendMessage("Вы не можете использовать умения в этом мире!");
+                return;
+            }
             plugin.getLogger().info("Player " + player.getName() + " used ability " + ability.getName());
             ability.use(player, playerData);
-        }
-        else {
-            //plugin.getLogger().info("Ability not found for display name: " + displayName);
         }
     }
 

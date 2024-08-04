@@ -75,7 +75,7 @@ public class PlayerData {
             case "ICE_WAVE":
                 return 30 * 1000;
             case "CHAOS_BEARER":
-                return 5 * 1000;
+                return 10 * 1000;
             case "BURIAL":
                 return 15 * 1000;
             case "LIGHT_HEAVEN":
@@ -83,11 +83,11 @@ public class PlayerData {
             case "ICE":
                 return 15 * 1000;
             case "DASH_TELEPORT":
-                return 7 * 1000;
+                return 10 * 1000;
             case "SKYFALL":
-                return 7 * 1000;
+                return 10 * 1000;
             case "WRATH_STORM":
-                return 7 * 1000;
+                return 15 * 1000;
             default:
                 return 0;
         }

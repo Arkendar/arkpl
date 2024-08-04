@@ -6,9 +6,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class BattleStatistics {
     private Map<UUID, PlayerStats> playerStats;
@@ -41,6 +40,14 @@ public class BattleStatistics {
         getOrCreateStats(player).draws++;
     }
 
+    public void recordAddRate(Player player) {
+        getOrCreateStats(player).rating++;
+    }
+
+    public void recordRedRate(Player player) {
+        getOrCreateStats(player).rating--;
+    }
+
     public PlayerStats getPlayerStats(Player player) {
         return getOrCreateStats(player);
     }
@@ -58,6 +65,8 @@ public class BattleStatistics {
             statsConfig.set(path + ".draws", stats.draws);
             statsConfig.set(path + ".kills", stats.kills);
             statsConfig.set(path + ".deaths", stats.deaths);
+            statsConfig.set(path + ".rating", stats.rating);
+
         }
         try {
             statsConfig.save(statsFile);
@@ -75,22 +84,54 @@ public class BattleStatistics {
             stats.draws = statsConfig.getInt(key + ".draws");
             stats.kills = statsConfig.getInt(key + ".kills");
             stats.deaths = statsConfig.getInt(key + ".deaths");
+            stats.rating = statsConfig.getInt(key + ".rating");
+
             playerStats.put(uuid, stats);
         }
     }
 
-    public static class PlayerStats {
+    public List<Map.Entry<UUID, PlayerStats>> getTopPlayers(int limit) {
+        return playerStats.entrySet().stream()
+                .sorted((e1, e2) -> Integer.compare(e2.getValue().rating, e1.getValue().rating))
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
+    public UUID getTopPlayer() {
+        UUID topPlayer = playerStats.entrySet().stream()
+                .max(Comparator.comparingInt(entry -> entry.getValue().getRating()))
+                .map(Map.Entry::getKey)
+                .orElse(null);
+        System.out.println("Top player UUID: " + topPlayer);
+        return topPlayer;
+    }
+
+    public boolean isInTop(Player player) {
+        UUID uuidPlayer = player.getUniqueId();
+        UUID topPlayer = getTopPlayer();
+        return uuidPlayer != null && uuidPlayer.equals(topPlayer);
+    }
+
+    public class PlayerStats {
         int wins;
         int losses;
         int draws;
         int kills;
         int deaths;
+        int rating;
 
         public int getWins() { return wins; }
         public int getLosses() { return losses; }
         public int getDraws() { return draws; }
         public int getKills() { return kills; }
         public int getDeaths() { return deaths; }
+        public int getRating() { return rating; }
+
+        public void updateRating(Player player, boolean isWin) {
+            PlayerStats stats = getOrCreateStats(player);
+            int ratingChange = isWin ? 25 : -20;
+            stats.rating = Math.max(0, stats.rating + ratingChange);
+        }
 
         public double getKDRatio() {
             return deaths == 0 ? kills : (double) kills / deaths;

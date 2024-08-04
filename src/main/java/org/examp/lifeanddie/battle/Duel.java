@@ -15,10 +15,6 @@ public class Duel extends AbstractBattle {
     private boolean wasDamaged = false;
     World targetWorld = Bukkit.getWorld("world"); // Хаб
 
-
-
-
-
     public Duel(List<Player> participants, BattleArena arena, BattleConfig config, JavaPlugin plugin, BattleStatistics statistics) {
         super(participants, arena, config);
         this.plugin = plugin;
@@ -49,7 +45,7 @@ public class Duel extends AbstractBattle {
         Player winner = determineWinner();
         if (winner != null) {
             announceWinner(winner);
-            giveReward(winner);
+            //giveReward(winner);
             updateStatistics(winner);
             plugin.getLogger().info("Duel ended. Winner: " + winner.getName());
         } else {
@@ -81,7 +77,7 @@ public class Duel extends AbstractBattle {
                     Location targetLocation = targetWorld.getSpawnLocation();
                     player.teleport(targetLocation);
                 } else {
-                    plugin.getLogger().warning("Target world 'world_name' not found!");
+                    plugin.getLogger().warning("Target world not found!");
                 }
             // Дополнительный сброс состояния игрока, если необходимо
         }
@@ -144,6 +140,9 @@ public class Duel extends AbstractBattle {
         statistics.recordLoss(loser);
         statistics.recordKill(winner);
         statistics.recordDeath(loser);
+        statistics.recordAddRate(winner);
+        statistics.recordRedRate(loser);
+
     }
 
     private void updateStatisticsForDraw() {

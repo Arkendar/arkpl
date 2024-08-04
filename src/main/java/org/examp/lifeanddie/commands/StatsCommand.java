@@ -39,6 +39,7 @@ public class StatsCommand implements CommandExecutor {
         BattleStatistics.PlayerStats stats = battleStatistics.getPlayerStats(targetPlayer);
 
         sender.sendMessage(ChatColor.GOLD + "Статистика игрока " + targetPlayer.getName() + ":");
+        sender.sendMessage(ChatColor.YELLOW + "Рейтинг: " + ChatColor.WHITE + stats.getRating());
         sender.sendMessage(ChatColor.YELLOW + "Победы: " + ChatColor.WHITE + stats.getWins());
         sender.sendMessage(ChatColor.YELLOW + "Поражения: " + ChatColor.WHITE + stats.getLosses());
         sender.sendMessage(ChatColor.YELLOW + "Ничьи: " + ChatColor.WHITE + stats.getDraws());

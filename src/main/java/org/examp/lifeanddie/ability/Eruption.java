@@ -73,7 +73,7 @@ public class Eruption extends AbstractAbility{
                 }
 
                 // Поджигаем игроков в радиусе каждый тик
-                for (Entity entity : world.getNearbyEntities(location, 5, 5, 5)) {
+                for (Entity entity : world.getNearbyEntities(location, 7, 7, 7)) {
                     if (entity instanceof Player && entity != player) {
                         entity.setFireTicks(60); // Поджигаем на 3 секунды
                     }
