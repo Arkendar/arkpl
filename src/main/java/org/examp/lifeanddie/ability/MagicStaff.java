@@ -9,7 +9,7 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.util.Vector;
 import org.examp.lifeanddie.LifeAndDie;
-import org.examp.lifeanddie.PlayerData;
+import org.examp.lifeanddie.player.PlayerData;
 
 public class MagicStaff extends AbstractAbility{
     private static final String ABILITY_NAME = "MAGIC_STAFF";
@@ -40,7 +40,7 @@ public class MagicStaff extends AbstractAbility{
         Vector direction = startLocation.getDirection().normalize();
         World world = player.getWorld();
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 15; i++) {
             Location particleLocation = startLocation.clone().add(direction.clone().multiply(i));
             if (particleLocation.getBlock().getType().isSolid()) {
                 break;
@@ -52,7 +52,7 @@ public class MagicStaff extends AbstractAbility{
             for (Entity entity : world.getNearbyEntities(particleLocation, 1, 1, 1)) {
                 if (entity instanceof LivingEntity && entity != player) {
                     LivingEntity target = (LivingEntity) entity;
-                    target.damage(6.0, player);
+                    target.damage(2.0, player);
                     return;
                 }
             }

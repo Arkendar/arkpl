@@ -10,7 +10,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import org.examp.lifeanddie.LifeAndDie;
-import org.examp.lifeanddie.PlayerData;
+import org.examp.lifeanddie.player.PlayerData;
 
 public class EarthJaws extends AbstractAbility {
     private static final String ABILITY_NAME = "EARTH_JAWS";

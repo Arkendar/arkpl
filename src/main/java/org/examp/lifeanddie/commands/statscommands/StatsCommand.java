@@ -1,4 +1,4 @@
-package org.examp.lifeanddie.commands;
+package org.examp.lifeanddie.commands.statscommands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

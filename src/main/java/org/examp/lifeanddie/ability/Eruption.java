@@ -8,7 +8,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.examp.lifeanddie.LifeAndDie;
-import org.examp.lifeanddie.PlayerData;
+import org.examp.lifeanddie.player.PlayerData;
 
 public class Eruption extends AbstractAbility{
     private static final String ABILITY_NAME = "ERUPTION";

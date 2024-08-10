@@ -9,7 +9,6 @@ import org.bukkit.inventory.ItemStack;
 import org.examp.lifeanddie.prefix.PrefixManager;
 
 import java.util.List;
-import java.util.Map;
 
 public class TagGUIListener implements Listener {
     private PrefixManager prefixManager;
@@ -44,12 +43,12 @@ public class TagGUIListener implements Listener {
             if (lore != null && lore.size() > 1) {
                 String tagKey = ChatColor.stripColor(lore.get(1)).substring(5);
 
-                if (prefixManager.getAvailableTags(player).containsKey(tagKey)) {
+                if (prefixManager.hasAccessToTag(player, tagKey)) {
                     prefixManager.setPlayerTag(player, tagKey);
                     player.sendMessage(ChatColor.GREEN + "Вы выбрали тег: " + prefixManager.getTag(tagKey));
                     player.closeInventory();
                 } else {
-                    player.sendMessage(ChatColor.RED + "Ошибка: Тег не найден в доступных тегах.");
+                    player.sendMessage(ChatColor.RED + "У вас нет доступа к этому тегу.");
                 }
             } else {
                 player.sendMessage(ChatColor.RED + "Ошибка: Неверный формат тега.");

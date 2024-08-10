@@ -7,9 +7,6 @@ commands:
   class:
     description: Choose your class.
     usage: /class <warrior|mage|archer>
-  skill:
-    description: Choose your skills.
-    usage: /skill
   duel:
     description: Send a duel invitation to another player
     usage: /<command> <player>
@@ -33,4 +30,13 @@ commands:
     usage: /<command> [количество]
   tag:
     description: Открывает меню выбора тега
+    usage: /<command>
+  reset:
+    description: Очищает инвентарь игрока
+    usage: /<command>
+  joinfraction:
+    description: Присоединиться к фракции
+    usage: /<command>
+  leavefraction:
+    description: Покинуть фракцию
     usage: /<command>

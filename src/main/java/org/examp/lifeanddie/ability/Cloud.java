@@ -13,7 +13,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.examp.lifeanddie.LifeAndDie;
-import org.examp.lifeanddie.PlayerData;
+import org.examp.lifeanddie.player.PlayerData;
 
 import java.util.Random;
 
@@ -57,7 +57,7 @@ public class Cloud extends AbstractAbility{
 
             @Override
             public void run() {
-                if (count >= 5) { // Спавним 5 зелий
+                if (count >= 8) { // Спавним 8 зелий
                     this.cancel();
                     return;
                 }

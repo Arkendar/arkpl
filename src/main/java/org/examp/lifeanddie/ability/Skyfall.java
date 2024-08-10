@@ -9,7 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import org.examp.lifeanddie.LifeAndDie;
-import org.examp.lifeanddie.PlayerData;
+import org.examp.lifeanddie.player.PlayerData;
 
 public class Skyfall extends AbstractAbility{
     private static final String ABILITY_NAME = "SKYFALL";

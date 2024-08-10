@@ -2,7 +2,7 @@ package org.examp.lifeanddie.ability;
 
 import org.bukkit.entity.Player;
 import org.examp.lifeanddie.LifeAndDie;
-import org.examp.lifeanddie.PlayerData;
+import org.examp.lifeanddie.player.PlayerData;
 
 public abstract class AbstractAbility implements Ability {
     protected final LifeAndDie plugin;

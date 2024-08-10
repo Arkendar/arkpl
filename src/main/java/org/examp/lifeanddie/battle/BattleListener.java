@@ -7,16 +7,17 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.examp.lifeanddie.LifeAndDie;
 
 import java.util.Optional;
 
 public class BattleListener implements Listener {
     private final BattleManager battleManager;
     private final DuelManager duelManager;
-    private final JavaPlugin plugin;  // Добавьте это поле
+    private final LifeAndDie plugin;
 
-    public BattleListener(JavaPlugin plugin, BattleManager battleManager, DuelManager duelManager) {
-        this.plugin = plugin;  // Инициализируйте plugin
+    public BattleListener(LifeAndDie plugin, BattleManager battleManager, DuelManager duelManager) {
+        this.plugin = plugin;
         this.battleManager = battleManager;
         this.duelManager = duelManager;
     }
@@ -37,6 +38,50 @@ public class BattleListener implements Listener {
         });
     }
 
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        plugin.getLogger().info("Player death event triggered");
+        Player victim = event.getEntity();
+        Player killer = victim.getKiller();
+
+
+        plugin.getLogger().info("Checking battle for player: " + victim.getName());
+        Optional<AbstractBattle> battle = battleManager.getBattleForPlayer(victim);
+
+        if (battle.isPresent()) {
+            plugin.getLogger().info("Battle found for player");
+            if (battle.get() instanceof Duel) {
+                plugin.getLogger().info("Battle is a Duel");
+                Duel duel = (Duel) battle.get();
+                if (!duel.isFinished()) {
+                    plugin.getLogger().info("Duel is not finished, ending it now");
+                    if (killer != null) {
+                        duel.onPlayerKill(killer, victim);
+                        plugin.resetPlayerCooldowns(killer);
+                    }
+                    plugin.resetPlayerCooldowns(victim);
+
+                    duelManager.endDuel(duel);
+
+                } else {
+                    if (killer != null) {
+                        duel.onPlayerKill(killer, victim);
+                        plugin.resetPlayerCooldowns(killer);
+                    }
+                    plugin.resetPlayerCooldowns(victim);
+
+                    duelManager.endDuel(duel);
+                    plugin.getLogger().info("Duel is already finished");
+                }
+            } else {
+                plugin.getLogger().info("Battle is not a Duel");
+            }
+        } else {
+            plugin.getLogger().info("No battle found for player");
+        }
+    }
+
+    /*
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         plugin.getLogger().info("Player death event triggered");
@@ -71,6 +116,7 @@ public class BattleListener implements Listener {
             plugin.getLogger().info("No battle found for player");
         }
     }
+     */
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {

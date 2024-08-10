@@ -8,11 +8,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 import org.examp.lifeanddie.LifeAndDie;
-import org.examp.lifeanddie.PlayerData;
+import org.examp.lifeanddie.player.PlayerData;
 
-public class DashTeleport extends AbstractAbility{
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class DashTeleport extends AbstractAbility {
     private static final String ABILITY_NAME = "DASH_TELEPORT";
 
     public DashTeleport(LifeAndDie plugin, PlayerData playerData) {
@@ -36,65 +39,128 @@ public class DashTeleport extends AbstractAbility{
         return ABILITY_NAME;
     }
 
-
     private void useDashTeleport(Player player) {
-        // Определяем направление движения игрока
-        Vector direction = player.getLocation().getDirection().normalize();
+        Player targetPlayer = getNearestPlayer(player);
+        if (targetPlayer == null) {
+            player.sendMessage("Нет ближайшего игрока для телепортации.");
+            return;
+        }
 
-        // Количество телепортаций
-        int teleportCount = 10;
+        Location targetLocation = targetPlayer.getLocation();
+        List<Location> safeLocations = findSafeLocations(targetLocation, 5);
 
-        // Задержка между телепортациями
-        int teleportDelay = 5; // Например, 5 тиков (0.25 секунды)
+        if (safeLocations.isEmpty()) {
+            player.sendMessage("Не найдено безопасных мест для телепортации.");
+            return;
+        }
 
+        // Создаем облако частиц
         new BukkitRunnable() {
-            int currentTeleport = 0;
+            int duration = 100; // 5 seconds (20 ticks per second)
 
             @Override
             public void run() {
-                if (currentTeleport >= teleportCount) {
+                if (duration <= 0) {
                     this.cancel();
                     return;
                 }
 
-                // Определяем точку телепортации
-                Location targetLocation = player.getLocation().clone();
-                double teleportDistance = 1 + (Math.random() * 3); //дальность телепортации
-
-                // Вычисляем вектор для телепортации в сторону
-                Vector sideVector = direction.crossProduct(new Vector(0, 1, 0)).normalize().multiply(teleportDistance);
-
-                // Определяем направление телепортации (влево или вправо)
-                boolean teleportRight = Math.random() < 0.5;
-                if (teleportRight) {
-                    targetLocation.add(sideVector);
-                } else {
-                    targetLocation.subtract(sideVector);
+                for (int i = 0; i < 100; i++) {
+                    Location fogLocation = getRandomLocationAround(targetLocation, 0, 8);
+                    targetLocation.getWorld().spawnParticle(Particle.CLOUD, fogLocation, 2, 0.2, 0.2, 0.2, 0);
                 }
 
-                // Проверяем, не пересекается ли точка телепортации со стеной или землей
-                if (targetLocation.getBlock().getType() != Material.AIR) {
-                    // Ищем ближайшую свободную точку для телепортации, двигаясь назад
-                    targetLocation.subtract(sideVector); // Возвращаемся к исходной позиции
-                    for (int i = 1; i <= 5; i++) {
-                        if (targetLocation.add(sideVector.multiply(0.5)).getBlock().getType() == Material.AIR) { // Двигаемся с шагом 0.5
-                            break;
-                        }
-                    }
+                // Применяем эффект слепоты только к цели
+                if (targetPlayer.isOnline() && targetPlayer.getLocation().distance(targetLocation) <= 8) {
+                    targetPlayer.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 100, 0));
+                    targetPlayer.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 100, 0));
                 }
 
-                // Телепортируем игрока
-                player.teleport(targetLocation);
-
-                // Создаем частицы телепортации
-                player.getWorld().spawnParticle(Particle.SPELL_WITCH, targetLocation, 50, 0.3, 2, 0.3, 0.01);
-
-                // Добавляем звук телепортации
-                player.getWorld().playSound(targetLocation, Sound.ENTITY_ENDERMEN_TELEPORT, 1.0F, 1.0F);
-
-                currentTeleport++;
+                duration--;
             }
-        }.runTaskTimer(plugin, 0L, teleportDelay);
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 10));
+        }.runTaskTimer(plugin, 0L, 1L);
+
+        // Телепортации
+        new BukkitRunnable() {
+            int teleportCount = 0;
+            final int maxTeleports = 5;
+
+            @Override
+            public void run() {
+                if (teleportCount >= maxTeleports || teleportCount >= safeLocations.size()) {
+                    this.cancel();
+                    return;
+                }
+
+                Location teleportLocation = safeLocations.get(teleportCount);
+
+                // Сохраняем текущее направление взгляда
+                float yaw = player.getLocation().getYaw();
+                float pitch = player.getLocation().getPitch();
+
+                // Телепортируем игрока и устанавливаем сохраненное направление взгляда
+                teleportLocation.setYaw(yaw);
+                teleportLocation.setPitch(pitch);
+                player.teleport(teleportLocation);
+
+                // Спавним частицы и проигрываем звук
+                player.getWorld().spawnParticle(Particle.CLOUD, teleportLocation, 50, 0.5, 2, 0.5, 0.01);
+                player.getWorld().playSound(teleportLocation, Sound.ENTITY_ILLUSION_ILLAGER_MIRROR_MOVE, 1.0F, 1.0F);
+
+                teleportCount++;
+            }
+        }.runTaskTimer(plugin, 0L, 10L); // Телепорт каждые 0.5 секунды (10 тиков)
+
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 2));
+    }
+
+    private List<Location> findSafeLocations(Location center, int count) {
+        List<Location> safeLocations = new ArrayList<>();
+        int attempts = 0;
+        int maxAttempts = count * 3; // Увеличиваем количество попыток
+
+        while (safeLocations.size() < count && attempts < maxAttempts) {
+            Location randomLocation = getRandomLocationAround(center, 3, 5);
+            if (isSafeLocation(randomLocation)) {
+                safeLocations.add(randomLocation);
+            }
+            attempts++;
+        }
+
+        return safeLocations;
+    }
+
+    private boolean isSafeLocation(Location location) {
+        return location.getBlock().getType() == Material.AIR &&
+                location.clone().add(0, 1, 0).getBlock().getType() == Material.AIR &&
+                location.clone().add(0, -1, 0).getBlock().getType().isSolid();
+    }
+
+    private Player getNearestPlayer(Player player) {
+        List<Player> otherPlayers = player.getWorld().getPlayers().stream()
+                .filter(p -> !p.equals(player))
+                .collect(Collectors.toList());
+
+        Player nearestPlayer = null;
+        double nearestDistance = 20;
+
+        for (Player otherPlayer : otherPlayers) {
+            double distance = player.getLocation().distance(otherPlayer.getLocation());
+            if (distance < nearestDistance) {
+                nearestDistance = distance;
+                nearestPlayer = otherPlayer;
+            }
+        }
+
+        return nearestPlayer;
+    }
+
+    private Location getRandomLocationAround(Location center, double minRadius, double maxRadius) {
+        double radius = minRadius + Math.random() * (maxRadius - minRadius);
+        double angle = Math.random() * 2 * Math.PI;
+        double x = center.getX() + radius * Math.cos(angle);
+        double z = center.getZ() + radius * Math.sin(angle);
+        double y = center.getY() + (Math.random() - 0.5) * 4; // Вертикальный разброс ±2 блока
+        return new Location(center.getWorld(), x, y, z);
     }
 }

@@ -1,4 +1,4 @@
-package org.examp.lifeanddie;
+package org.examp.lifeanddie.player;
 
 import org.bukkit.entity.Player;
 
@@ -29,7 +29,7 @@ public class PlayerData {
     public boolean isInCooldown(String ability, UUID playerId) {
         long currentTime = System.currentTimeMillis();
         if (cooldowns.containsKey(ability + playerId.toString())) {
-            long lastUseTime = cooldowns.get(ability + playerId.toString());
+            long lastUseTime = cooldowns.get(ability + playerId);
             long cooldownTimeLeft = getCooldownTime(ability) - (currentTime - lastUseTime);
             return cooldownTimeLeft > 0;
         }
@@ -48,7 +48,7 @@ public class PlayerData {
         return Math.max(0, timeLeft);
     }
 
-    long getCooldownTime(String ability) {
+    public long getCooldownTime(String ability) {
         switch (ability) {
             case "DASH":
                 return 7 * 1000;
@@ -57,7 +57,7 @@ public class PlayerData {
             case "FIRE_STRIKE":
                 return 15 * 1000;
             case "MAGIC_STAFF":
-                return (long) (1.5 * 1000);
+                return 1 * 1000;
             case "FLY":
                 return 15 * 1000;
             case "CLOUD":
@@ -79,17 +79,28 @@ public class PlayerData {
             case "BURIAL":
                 return 15 * 1000;
             case "LIGHT_HEAVEN":
-                return 15 * 1000;
+                return 20 * 1000;
             case "ICE":
-                return 15 * 1000;
+                return 20 * 1000;
             case "DASH_TELEPORT":
-                return 10 * 1000;
+                return 15 * 1000;
             case "SKYFALL":
-                return 10 * 1000;
+                return 15 * 1000;
             case "WRATH_STORM":
                 return 15 * 1000;
             default:
                 return 0;
         }
     }
+
+    public void resetCooldowns(Player player) {
+        if (player != null) {
+            UUID playerUUID = player.getUniqueId();
+            cooldowns.entrySet().removeIf(entry -> entry.getKey().endsWith(playerUUID.toString()));
+        } else {
+            return;
+        }
+
+    }
+
 }

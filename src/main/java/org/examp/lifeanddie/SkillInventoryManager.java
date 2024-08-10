@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.examp.lifeanddie.player.PlayerClassManager;
 
 public class SkillInventoryManager implements Listener {
 

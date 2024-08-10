@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.examp.lifeanddie.LifeAndDie;
-import org.examp.lifeanddie.PlayerData;
+import org.examp.lifeanddie.player.PlayerData;
 
 import java.util.List;
 
@@ -58,7 +58,7 @@ public class Burial extends AbstractAbility{
                 // Дополнительные эффекты после возвращения
                 target.getWorld().spawnParticle(Particle.FALLING_DUST, target.getLocation(), 50, 0.2, 2.2, 0.2, 0.1);
             }
-        }.runTaskLater(plugin, 60); // 3 секунды (60 тиков)
+        }.runTaskLater(plugin, 30); // 1.5 секунды (30 тиков)
     }
 
     private Player getTargetPlayer(Player caster, int maxDistance) {

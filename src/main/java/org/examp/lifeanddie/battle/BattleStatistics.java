@@ -107,9 +107,13 @@ public class BattleStatistics {
     }
 
     public boolean isInTop(Player player) {
-        UUID uuidPlayer = player.getUniqueId();
-        UUID topPlayer = getTopPlayer();
-        return uuidPlayer != null && uuidPlayer.equals(topPlayer);
+        UUID topPlayer = getTopPlayer(); // Теперь использует кешированное значение
+        return player.getUniqueId().equals(topPlayer);
+    }
+
+    public int getPlayerRating(Player player) {
+        BattleStatistics.PlayerStats stats = getPlayerStats(player);
+        return stats.getRating();
     }
 
     public class PlayerStats {
@@ -126,12 +130,6 @@ public class BattleStatistics {
         public int getKills() { return kills; }
         public int getDeaths() { return deaths; }
         public int getRating() { return rating; }
-
-        public void updateRating(Player player, boolean isWin) {
-            PlayerStats stats = getOrCreateStats(player);
-            int ratingChange = isWin ? 25 : -20;
-            stats.rating = Math.max(0, stats.rating + ratingChange);
-        }
 
         public double getKDRatio() {
             return deaths == 0 ? kills : (double) kills / deaths;

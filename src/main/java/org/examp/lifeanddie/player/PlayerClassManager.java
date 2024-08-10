@@ -1,4 +1,4 @@
-package org.examp.lifeanddie;
+package org.examp.lifeanddie.player;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.examp.lifeanddie.LifeAndDie;
 
 import java.util.*;
 import static org.bukkit.Material.*;
@@ -31,14 +32,29 @@ public class PlayerClassManager implements Listener {
 
     private void equipPlayer(Player player, PlayerClass playerClass) {
         switch (playerClass) {
-            case WARRIOR:
-                equipWarrior(player);
+            case DEMON_SLAYER:
+                equipDemonSlayer(player);
                 break;
-            case MAGE:
-                equipMage(player);
+            case PHANTOM_HUNTER:
+                equipPhantomHunter(player);
                 break;
-            case ARCHER:
-                equipArcher(player);
+            case ARCHMAGE:
+                equipArchmage(player);
+                break;
+            case LIGHTNING:
+                equipLightning(player);
+                break;
+            case HEIR_ANCIENTS:
+                equipHeirAncients(player);
+                break;
+            case MERCY:
+                equipMercy(player);
+                break;
+            case ANGEL_OF_DEATH:
+                equipAngelOfDeath(player);
+                break;
+            case GUARDIAN:
+                equipGuardian(player);
                 break;
         }
     }
@@ -60,7 +76,7 @@ public class PlayerClassManager implements Listener {
         ItemMeta featherMeta = feather.getItemMeta();
         List<String> loreFeather = new ArrayList<>();
         loreFeather.add("§eДелает рывок по направлению взгляда.");
-        loreFeather.add("§eОткат: 10 секунд.");
+        loreFeather.add("§eОткат: 7 секунд.");
         featherMeta.setDisplayName("§aРывок");
         featherMeta.setLore(loreFeather);
         feather.setItemMeta(featherMeta);
@@ -97,7 +113,7 @@ public class PlayerClassManager implements Listener {
         quartzMeta.setDisplayName("§fВзлёт");
         List<String> loreQuartz = new ArrayList<>();
         loreQuartz.add("§eПодкидывает вверх и удерживает недолго наверху.");
-        loreQuartz.add("§eОткат: 10 секунд.");
+        loreQuartz.add("§eОткат: 15 секунд.");
         quartzMeta.setLore(loreQuartz);
         quartz.setItemMeta(quartzMeta);
         return quartz;
@@ -121,7 +137,7 @@ public class PlayerClassManager implements Listener {
         spellEruptionMeta.setDisplayName("§6Извержение");
         List<String> loreSpellEruption = new ArrayList<>();
         loreSpellEruption.add("§eПризывает огненный столб, который поджигает всех вокруг в течение 7 секунд");
-        loreSpellEruption.add("§eОткат 25 секунд.");
+        loreSpellEruption.add("§eОткат: 25 секунд.");
         spellEruptionMeta.setLore(loreSpellEruption);
         spellEruption.setItemMeta(spellEruptionMeta);
         return spellEruption;
@@ -130,9 +146,10 @@ public class PlayerClassManager implements Listener {
     public ItemStack createPhaseArrow() {
         ItemStack PhaseArrow = new ItemStack(PRISMARINE_SHARD);
         ItemMeta PhaseArrowMeta = PhaseArrow.getItemMeta();
-        PhaseArrowMeta.setDisplayName("§bПронзающая стрела");
+        PhaseArrowMeta.setDisplayName("§bВолна стрел");
         List<String> lorePhaseArrow = new ArrayList<>();
-        lorePhaseArrow.add("§eПосле активации следующая стрела пройдет сквозь блоки.");
+        lorePhaseArrow.add("§eВыпускает веер стрел");
+        lorePhaseArrow.add("§eОткат: 20 секунд.");
         PhaseArrowMeta.setLore(lorePhaseArrow);
         PhaseArrow.setItemMeta(PhaseArrowMeta);
         return PhaseArrow;
@@ -143,8 +160,8 @@ public class PlayerClassManager implements Listener {
         ItemMeta AstralSphereMeta = AstralSphere.getItemMeta();
         AstralSphereMeta.setDisplayName("§dАстральная Сфера");
         List<String> loreAstralSphere = new ArrayList<>();
-        loreAstralSphere.add("§eСоздает астральную сферу, которая исцеляет тебя и отталкивает врагов.");
-        loreAstralSphere.add("§eОткат 30 секунд.");
+        loreAstralSphere.add("§eСоздает астральную сферу, которая медленно исцеляет тебя и отталкивает врагов.");
+        loreAstralSphere.add("§eОткат: 30 секунд.");
         AstralSphereMeta.setLore(loreAstralSphere);
         AstralSphere.setItemMeta(AstralSphereMeta);
         return AstralSphere;
@@ -180,7 +197,7 @@ public class PlayerClassManager implements Listener {
         ChaosBearerMeta.setDisplayName("§4Несущий хаос");
         List<String> loreChaosBearer = new ArrayList<>();
         loreChaosBearer.add("§eНесколько рывков, которые наносят урон, а затем возвращение в начальную точку");
-        loreChaosBearer.add("§eОткат 30 секунд.");
+        loreChaosBearer.add("§eОткат 10 секунд.");
         ChaosBearerMeta.setLore(loreChaosBearer);
         ChaosBearer.setItemMeta(ChaosBearerMeta);
         return ChaosBearer;
@@ -204,7 +221,7 @@ public class PlayerClassManager implements Listener {
         LightHeavenMeta.setDisplayName("§3Свет Небес");
         List<String> loreLightHeaven = new ArrayList<>();
         loreLightHeaven.add("§eПризывает в указанное место столб света исцеляющий союзников и вредящий противникам.");
-        loreLightHeaven.add("§eОткат 15 секунд.");
+        loreLightHeaven.add("§eОткат 20 секунд.");
         LightHeavenMeta.setLore(loreLightHeaven);
         LightHeaven.setItemMeta(LightHeavenMeta);
         return LightHeaven;
@@ -217,7 +234,7 @@ public class PlayerClassManager implements Listener {
         IceMeta.setDisplayName("§bЛёд");
         List<String> loreIce = new ArrayList<>();
         loreIce.add("§eПризывает град из льда, который наносит урон противнику.");
-        loreIce.add("§eОткат 15 секунд.");
+        loreIce.add("§eОткат 20 секунд.");
         IceMeta.setLore(loreIce);
         Ice.setItemMeta(IceMeta);
         return Ice;
@@ -227,9 +244,10 @@ public class PlayerClassManager implements Listener {
         ItemStack DashTeleport = new ItemStack(PAPER);
 
         ItemMeta DashTeleportMeta = DashTeleport.getItemMeta();
-        DashTeleportMeta.setDisplayName("§9Уклонение");
+        DashTeleportMeta.setDisplayName("§9Дымка");
         List<String> loreDashTeleport = new ArrayList<>();
-        loreDashTeleport.add("§eТелепортирует из стороны в сторону");
+        loreDashTeleport.add("§eПризывает туман, рандомно телепортирует вокруг ослепленного противника.");
+        loreDashTeleport.add("§eПрименение: не дальше 20ти блоков");
         loreDashTeleport.add("§eОткат 15 секунд.");
         DashTeleportMeta.setLore(loreDashTeleport);
         DashTeleport.setItemMeta(DashTeleportMeta);
@@ -243,7 +261,7 @@ public class PlayerClassManager implements Listener {
         SkyfallMeta.setDisplayName("§4Падение");
         List<String> loreSkyfall = new ArrayList<>();
         loreSkyfall.add("§eТелепортирует над игроком и наносит урон при приземлении.");
-        loreSkyfall.add("§eОткат 7 секунд.");
+        loreSkyfall.add("§eОткат 15 секунд.");
         SkyfallMeta.setLore(loreSkyfall);
         Skyfall.setItemMeta(SkyfallMeta);
         return Skyfall;
@@ -256,15 +274,14 @@ public class PlayerClassManager implements Listener {
         WrathStormMeta.setDisplayName("§cБуря Гнева");
         List<String> loreWrathStorm = new ArrayList<>();
         loreWrathStorm.add("§eУничтожает противника разрезающими снарядами");
-        loreWrathStorm.add("§eОткат 7 секунд.");
+        loreWrathStorm.add("§eУправляется направлением взгляда и из точки использования");
+        loreWrathStorm.add("§eОткат 15 секунд.");
         WrathStormMeta.setLore(loreWrathStorm);
         WrathStorm.setItemMeta(WrathStormMeta);
         return WrathStorm;
     }
 
-    private void equipWarrior(Player player) {
-        player.getInventory().clear();
-
+    public ItemStack createSword() {
         ItemStack sword = new ItemStack(IRON_SWORD);
         ItemMeta swordMeta = sword.getItemMeta();
         swordMeta.setDisplayName("§aЖелезный меч");
@@ -273,16 +290,44 @@ public class PlayerClassManager implements Listener {
         swordMeta.setLore(loreSword);
         swordMeta.setUnbreakable(true);
         sword.setItemMeta(swordMeta);
+        return sword;
+    }
 
+    public ItemStack createStaff() {
+        ItemStack staff = new ItemStack(BLAZE_ROD);
+        ItemMeta staffMeta = staff.getItemMeta();
+        staffMeta.setDisplayName("§bПосох");
+        List<String> loreStaff = new ArrayList<>();
+        loreStaff.add("§eЭтот посох не был создан с любовью");
+        staffMeta.setLore(loreStaff);
+        staff.setItemMeta(staffMeta);
+        return staff;
+    }
+
+    public ItemStack createBow() {
+        ItemStack bow = new ItemStack(BOW);
+        ItemMeta bowMeta = bow.getItemMeta();
+        bowMeta.setDisplayName("§aЛук");
+        List<String> lorebow = new ArrayList<>();
+        lorebow.add("§e Неизвестно был ли этот лук создан с любовью");
+        bowMeta.setLore(lorebow);
+        bowMeta.setUnbreakable(true);
+        bow.setItemMeta(bowMeta);
+        bow.addEnchantment(Enchantment.ARROW_INFINITE, 1);
+        return bow;
+    }
+
+    private void equipWarrior(Player player) {
+        player.getInventory().clear();
+
+        //sword
+        player.getInventory().setItem(0,createSword());
         //Рывок
         player.getInventory().setItem(1, createDashSkill());
         //Крепость
         player.getInventory().setItem(2, createFortressSkill());
         //Огненная кара
         player.getInventory().setItem(3, createFireStrikeSkill());
-
-
-        player.getInventory().setItem(0, sword);
 
         player.getInventory().setHelmet(new ItemStack(IRON_HELMET));
         player.getInventory().setChestplate(new ItemStack(IRON_CHESTPLATE));
@@ -294,13 +339,7 @@ public class PlayerClassManager implements Listener {
         player.getInventory().clear();
 
         //посох
-        ItemStack staff = new ItemStack(BLAZE_ROD);
-        ItemMeta staffMeta = staff.getItemMeta();
-        staffMeta.setDisplayName("§bПосох");
-        List<String> loreStaff = new ArrayList<>();
-        loreStaff.add("§eЭтот посох не был создан с любовью");
-        staffMeta.setLore(loreStaff);
-        staff.setItemMeta(staffMeta);
+        player.getInventory().setItem(0,createStaff());
 
         //ботинки на невесомость
         ItemStack ironBoots = new ItemStack(IRON_BOOTS);
@@ -316,24 +355,13 @@ public class PlayerClassManager implements Listener {
         //Извержение
         player.getInventory().setItem(3, createEruptionSkill());
 
-        player.getInventory().setItem(0, staff);
         player.getInventory().setBoots(ironBoots);
     }
 
     private void equipArcher(Player player){
         player.getInventory().clear();
 
-        ItemStack bow = new ItemStack(BOW);
-        ItemMeta bowMeta = bow.getItemMeta();
-        bowMeta.setDisplayName("§aЛук");
-        List<String> lorebow = new ArrayList<>();
-        lorebow.add("§e Неизвестно был ли этот лук создан с любовью");
-        bowMeta.setLore(lorebow);
-        bowMeta.setUnbreakable(true);
-        bow.setItemMeta(bowMeta);
-        bow.addEnchantment(Enchantment.ARROW_INFINITE, 1);
-
-        player.getInventory().setItem(0, bow);
+        player.getInventory().setItem(0, createBow());
 
         //Пронзающая стрела
         player.getInventory().setItem(1, createPhaseArrow());
@@ -346,4 +374,85 @@ public class PlayerClassManager implements Listener {
 
     }
 
+    private void equipDemonSlayer(Player player) {
+        player.getInventory().clear();
+
+        player.getInventory().setItem(0, createSword());
+        player.getInventory().setItem(1, createDashSkill());
+        player.getInventory().setItem(2, createFireStrikeSkill());
+        player.getInventory().setItem(3, createSkyfall());
+        player.getInventory().setItem(4, createDashTeleport());
+    }
+
+    private void equipPhantomHunter(Player player) {
+        player.getInventory().clear();
+
+        player.getInventory().setItem(0, createBow());
+        player.getInventory().setItem(1, createFlightSkill());
+        player.getInventory().setItem(2, createDashTeleport());
+        player.getInventory().setItem(3, createPhaseArrow());
+        player.getInventory().setItem(4, createAstralSphere());
+
+        player.getInventory().setItem(player.getInventory().firstEmpty(), new ItemStack(ARROW));
+    }
+
+    private void equipArchmage(Player player) {
+        player.getInventory().clear();
+
+        player.getInventory().setItem(0, createStaff());
+        player.getInventory().setItem(1, createFlightSkill());
+        player.getInventory().setItem(2, createIce());
+        player.getInventory().setItem(3, createFireStrikeSkill());
+        player.getInventory().setItem(4, createEruptionSkill());
+    }
+
+    private void equipLightning(Player player) {
+        player.getInventory().clear();
+
+        player.getInventory().setItem(0, createSword());
+        player.getInventory().setItem(1, createDashTeleport());
+        player.getInventory().setItem(2, createChaosBearer());
+        player.getInventory().setItem(3, createLightningStorm());
+        player.getInventory().setItem(4, createDeathSkill());
+    }
+
+    private void equipHeirAncients(Player player) {
+        player.getInventory().clear();
+
+        player.getInventory().setItem(0, createStaff());
+        player.getInventory().setItem(1, createFlightSkill());
+        player.getInventory().setItem(2, createEarthJaws());
+        player.getInventory().setItem(3, createWrathStorm());
+        player.getInventory().setItem(4, createLightningStorm());
+    }
+
+    private void equipMercy(Player player) {
+        player.getInventory().clear();
+
+        player.getInventory().setItem(0, createStaff());
+        player.getInventory().setItem(1, createAstralSphere());
+        player.getInventory().setItem(2, createBurial());
+        player.getInventory().setItem(3, createLightHeaven());
+        player.getInventory().setItem(4, createIceWave());
+    }
+
+    private void equipAngelOfDeath(Player player) {
+        player.getInventory().clear();
+
+        player.getInventory().setItem(0, createSword());
+        player.getInventory().setItem(1, createBurial());
+        player.getInventory().setItem(2, createEruptionSkill());
+        player.getInventory().setItem(3, createFireStrikeSkill());
+        player.getInventory().setItem(4, createDeathSkill());
+    }
+
+    private void equipGuardian(Player player) {
+        player.getInventory().clear();
+
+        player.getInventory().setItem(0, createSword());
+        player.getInventory().setItem(1, createDashSkill());
+        player.getInventory().setItem(2, createFortressSkill());
+        player.getInventory().setItem(3, createSkyfall());
+        player.getInventory().setItem(4, createWrathStorm());
+    }
 }

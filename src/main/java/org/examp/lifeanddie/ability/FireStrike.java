@@ -8,7 +8,7 @@ import org.bukkit.Sound;
 import org.bukkit.util.Vector;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.examp.lifeanddie.LifeAndDie;
-import org.examp.lifeanddie.PlayerData;
+import org.examp.lifeanddie.player.PlayerData;
 
 public class FireStrike extends AbstractAbility {
     private static final String ABILITY_NAME = "FIRE_STRIKE";

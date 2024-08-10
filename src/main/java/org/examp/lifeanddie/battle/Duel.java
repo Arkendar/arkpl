@@ -73,12 +73,12 @@ public class Duel extends AbstractBattle {
         for (Player player : participants) {
             player.setHealth(player.getMaxHealth());
             player.setFoodLevel(20);
-                if (targetWorld != null) {
-                    Location targetLocation = targetWorld.getSpawnLocation();
-                    player.teleport(targetLocation);
-                } else {
-                    plugin.getLogger().warning("Target world not found!");
-                }
+            if (targetWorld != null) {
+                Location targetLocation = targetWorld.getSpawnLocation();
+                player.teleport(targetLocation);
+            } else {
+                plugin.getLogger().warning("Target world not found!");
+            }
             // Дополнительный сброс состояния игрока, если необходимо
         }
     }
